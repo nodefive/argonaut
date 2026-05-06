@@ -1,0 +1,33 @@
+@import url("resource:///org/gnome/theme/gtk.css");
+
+menu {
+  background-color: #ffffff;
+  color: rgba(0, 0, 0, 0.8);
+  box-shadow: none;
+}
+
+.background.csd > menu,
+.background.popup > menu {
+  background-color: #ffffff;
+  box-shadow: none;
+}
+
+menu > separator {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+menu > menuitem {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+menu > menuitem:disabled {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+menu > menuitem arrow {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+menu > menuitem:hover arrow {
+  color: white;
+}

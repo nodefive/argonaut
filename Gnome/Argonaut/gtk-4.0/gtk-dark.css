@@ -1,0 +1,72 @@
+/* Argonaut libadwaita dark-mode color overrides */
+
+@define-color accent_color #027ad7;
+@define-color accent_bg_color #027ad7;
+@define-color accent_fg_color #ffffff;
+
+@define-color destructive_color #ED5F5D;
+@define-color destructive_bg_color #ED5F5D;
+@define-color destructive_fg_color #ffffff;
+
+@define-color success_color #8ce10b;
+@define-color success_bg_color #8ce10b;
+@define-color success_fg_color #000000;
+
+@define-color warning_color #ffb900;
+@define-color warning_bg_color #ffb900;
+@define-color warning_fg_color #000000;
+
+@define-color error_color #ED5F5D;
+@define-color error_bg_color #ED5F5D;
+@define-color error_fg_color #ffffff;
+
+@define-color window_bg_color #0e1019;
+@define-color window_fg_color #d8dee9;
+
+@define-color view_bg_color #101321;
+@define-color view_fg_color #d8dee9;
+
+@define-color headerbar_bg_color #101321;
+@define-color headerbar_fg_color #d8dee9;
+@define-color headerbar_border_color rgba(255, 255, 255, 0.08);
+@define-color headerbar_backdrop_color #0e1019;
+@define-color headerbar_shade_color rgba(0, 0, 0, 0.36);
+
+@define-color sidebar_bg_color #0e1019;
+@define-color sidebar_fg_color #d8dee9;
+@define-color sidebar_border_color rgba(255, 255, 255, 0.06);
+@define-color sidebar_backdrop_color #0e1019;
+
+@define-color card_bg_color #151829;
+@define-color card_fg_color #d8dee9;
+@define-color card_shade_color rgba(0, 0, 0, 0.25);
+
+@define-color popover_bg_color #151829;
+@define-color popover_fg_color #d8dee9;
+@define-color popover_shade_color rgba(0, 0, 0, 0.25);
+
+@define-color dialog_bg_color #151829;
+@define-color dialog_fg_color #d8dee9;
+
+@define-color shade_color rgba(0, 0, 0, 0.36);
+@define-color scrollbar_outline_color rgba(0, 0, 0, 0.5);
+
+@import url("resource:///org/gnome/theme/gtk-dark.css");
+
+separator {
+  background-color: rgba(0, 0, 0, 0.2);
+  min-height: 1px;
+  min-width: 1px;
+}
+
+popover > contents {
+  box-shadow: none;
+  border: none;
+}
+
+/* No glow on focused entries (address bar, search, etc.) */
+entry:focus-within,
+spinbutton:focus-within {
+  box-shadow: none;
+  outline: none;
+}

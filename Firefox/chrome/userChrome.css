@@ -1,0 +1,120 @@
+/*
+ * Argonaut Firefox Theme - Terminal Match Edition
+ */
+
+:root {
+    --toolbar-bgcolor: #0f1419 !important;
+    --toolbar-color: #ffffff !important;
+    --lwt-accent-color: #0f1419 !important;
+    --lwt-text-color: #ffffff !important;
+    --lwt-selected-tab-background-color: #1a1f25 !important;
+    --toolbar-field-background-color: #1a1f25 !important;
+    --toolbar-field-color: #ffffff !important;
+    --toolbar-field-focus-background-color: #1a1f25 !important;
+    --toolbar-field-focus-border-color: transparent !important;
+    --urlbar-focus-outline-color: transparent !important;
+}
+
+/* ── Toolbox / Nav / Bookmarks ── */
+#navigator-toolbox,
+#nav-bar,
+#PersonalToolbar,
+#TabsToolbar {
+    border: none !important;
+    box-shadow: none !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+#navigator-toolbox,
+#PersonalToolbar {
+    background-color: #0f1419 !important;
+}
+
+#PersonalToolbar,
+#PersonalToolbar .bookmark-item {
+    color: #ffffff !important;
+}
+
+/* ── Tabs ── */
+.tab-background {
+    border: none !important;
+}
+
+.tab-background[selected="true"] {
+    background-color: #1a1f25 !important;
+    background-image: none !important;
+}
+
+.tabbrowser-tab:is([selected], [multiselected]) > .tab-stack > .tab-background {
+    box-shadow: none !important;
+}
+
+/* ── URL bar — flat, no focus glow or blue ring ── */
+#urlbar-background,
+#urlbar[focused] > #urlbar-background,
+#urlbar[focused="true"] > #urlbar-background,
+#urlbar:focus-within > #urlbar-background {
+    background-color: #1a1f25 !important;
+    border: none !important;
+    border-color: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+#urlbar-container,
+#urlbar-input-container,
+#urlbar-input {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* Global focus ring removal */
+:focus {
+    outline: none !important;
+}
+
+/* ── Context Menu (right-click in page) ── */
+menupopup {
+    --panel-background: #151829 !important;
+    --panel-color: #ffffff !important;
+    --panel-border-color: transparent !important;
+    --panel-separator-color: transparent !important;
+    background-color: #151829 !important;
+    color: #ffffff !important;
+    -moz-appearance: none !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-radius: 10px !important;
+}
+
+menupopup > menuitem,
+menupopup > menu,
+menupopup > menugroup > menuitem {
+    color: #ffffff !important;
+    background-color: transparent !important;
+    -moz-appearance: none !important;
+    border: none !important;
+}
+
+menupopup > menuitem:hover:not([disabled]),
+menupopup > menu:hover:not([disabled]) {
+    background-color: rgba(255,255,255,0.08) !important;
+    color: #ffffff !important;
+}
+
+menupopup > menuitem[disabled="true"],
+menupopup > menu[disabled="true"] {
+    color: #55606b !important;
+}
+
+menupopup > menuseparator {
+    -moz-appearance: none !important;
+    border: none !important;
+    border-top: 1px solid rgba(0,0,0,0.5) !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 3px 6px !important;
+}
