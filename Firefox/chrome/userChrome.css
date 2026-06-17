@@ -50,6 +50,16 @@
     box-shadow: none !important;
 }
 
+.tabbrowser-tab:not([selected]):not([multiselected]) .tab-label {
+    color: #6b7681 !important;
+    opacity: 1 !important;
+}
+
+.tabbrowser-tab:is([selected], [multiselected]) .tab-label {
+    color: #ffffff !important;
+    opacity: 1 !important;
+}
+
 /* ── URL bar — flat, no focus glow or blue ring ── */
 #urlbar-background,
 #urlbar[focused] > #urlbar-background,
