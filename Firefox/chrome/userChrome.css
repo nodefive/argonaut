@@ -86,18 +86,28 @@
 }
 
 /* ── Context Menu (right-click in page) ── */
+/* Firefox paints popups on ::part(content) using these variables. The host
+ * element is larger than the visible popup (it reserves the shadow margin),
+ * so it must stay transparent or its background shows as a thick frame. */
 menupopup {
-    --panel-background: #151829 !important;
-    --panel-color: #ffffff !important;
-    --panel-border-color: transparent !important;
+    --panel-background-color: #151829 !important;
+    --panel-text-color: #ffffff !important;
+    --panel-border-color: #2a3150 !important;
+    --panel-border-radius: 8px !important;
     --panel-separator-color: transparent !important;
-    background-color: #151829 !important;
+    --panel-box-shadow: none !important;
+    background: transparent !important;
     color: #ffffff !important;
     -moz-appearance: none !important;
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
-    border-radius: 10px !important;
+}
+
+menupopup::part(content) {
+    background: #151829 !important;
+    border: 1px solid #2a3150 !important;
+    box-shadow: none !important;
 }
 
 menupopup > menuitem,
@@ -127,4 +137,56 @@ menupopup > menuseparator {
     height: 0 !important;
     padding: 0 !important;
     margin: 3px 6px !important;
+}
+
+/* ── <select> dropdowns (web page comboboxes) ──
+ * When a page styles its <select> with a background, Firefox paints that
+ * color as a background-image on the popup's arrowscrollbox part, covering
+ * the menupopup background. Combined with the forced white menuitem text
+ * above, this produced white text on a white list. Force the theme colors
+ * on every layer of the popup instead of the page-supplied ones. */
+#ContentSelectDropdown > menupopup,
+#ContentSelectDropdown > menupopup[customoptionstyling="true"] {
+    --content-select-background-image: none !important;
+    background: transparent !important;
+    color: #ffffff !important;
+}
+
+#ContentSelectDropdown > menupopup::part(content),
+#ContentSelectDropdown > menupopup::part(arrowscrollbox),
+#ContentSelectDropdown > menupopup::part(arrowscrollbox-scrollbox),
+#ContentSelectDropdown > menupopup[customoptionstyling="true"]::part(arrowscrollbox) {
+    background-color: #151829 !important;
+    background-image: none !important;
+}
+
+#ContentSelectDropdown > menupopup::part(content) {
+    border: 1px solid #2a3150 !important;
+}
+
+/* Solid item background so no underlying layer can show through */
+#ContentSelectDropdown > menupopup > :is(menuitem, menucaption),
+#ContentSelectDropdown > menupopup > :is(menuitem, menucaption)[customoptionstyling="true"] {
+    color: #ffffff !important;
+    background-color: #151829 !important;
+    background-image: none !important;
+    text-shadow: none !important;
+}
+
+#ContentSelectDropdown > menupopup > menucaption {
+    color: #8a94a0 !important;
+}
+
+#ContentSelectDropdown > menupopup > :is(menuitem, menucaption)[_moz-menuactive="true"],
+#ContentSelectDropdown > menupopup > menuitem:hover:not([disabled="true"]) {
+    background-color: #2a3150 !important;
+    color: #ffffff !important;
+}
+
+#ContentSelectDropdown > menupopup > menuitem[selected="true"]:not([_moz-menuactive="true"]) {
+    background-color: rgba(255,255,255,0.06) !important;
+}
+
+#ContentSelectDropdown > menupopup > menuitem[disabled="true"] {
+    color: #55606b !important;
 }

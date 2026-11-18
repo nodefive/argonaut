@@ -7,6 +7,7 @@ A dark, terminal-inspired Firefox chrome override that replaces the default brow
 - Toolbar and navigation bar background: `#0f1419`
 - Selected tab and URL bar background: `#1a1f25`
 - Context menu background: `#151829` with rounded corners and no visible borders
+- `<select>` dropdowns on web pages: `#151829` list with white text, overriding page-supplied option colors
 - All focus rings and box shadows removed for a completely flat look
 - White text throughout for readability
 
@@ -24,7 +25,7 @@ Firefox loads a file called `userChrome.css` from a `chrome/` subdirectory insid
 
 ## Finding your Firefox profile directory
 
-Firefox stores profiles under `~/.mozilla/firefox/`. Each profile is a directory named with a random string followed by a descriptive suffix, for example `a1b2c3d4.default-release`. The active profile is identified in `~/.mozilla/firefox/profiles.ini` under the `Path=` key of the section marked `Default=1`.
+Firefox 147 and newer store profiles under `~/.config/mozilla/firefox/` (older versions use `~/.mozilla/firefox/`). Each profile is a directory named with a random string followed by a descriptive suffix, for example `a1b2c3d4.default-release`. The active profile is identified in `~/.mozilla/firefox/profiles.ini` under the `Path=` key of the section marked `Default=1`.
 
 To find it manually:
 
@@ -70,7 +71,7 @@ bash install.sh
 
 The script will:
 
-1. Parse `~/.mozilla/firefox/profiles.ini` to find your default profile path automatically.
+1. Parse `profiles.ini` (from `~/.config/mozilla/firefox/` or `~/.mozilla/firefox/`) to find the default profile, preferring the `Default=` entry of the `[Install*]` section.
 2. Create the `chrome/` directory inside that profile if it does not exist.
 3. Copy `userChrome.css` into place.
 4. Attempt to set `toolkit.legacyUserProfileCustomizations.stylesheets=true` in `user.js` inside the profile (Firefox reads `user.js` on startup and applies any preferences defined there).

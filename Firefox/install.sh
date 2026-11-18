@@ -2,11 +2,30 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROFILES_INI="$HOME/.mozilla/firefox/profiles.ini"
+# Firefox 147+ uses the XDG location; older versions use ~/.mozilla.
+if [[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/mozilla/firefox/profiles.ini" ]]; then
+    FIREFOX_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/mozilla/firefox"
+else
+    FIREFOX_DIR="$HOME/.mozilla/firefox"
+fi
+PROFILES_INI="$FIREFOX_DIR/profiles.ini"
 
 # ---------------------------------------------------------------------------
 # Find the default Firefox profile path
+#
+# Preference order:
+#   1. Default= in an [Install*] section (the profile this install uses)
+#   2. The [Profile*] section marked Default=1
 # ---------------------------------------------------------------------------
+
+resolve_path() {
+    local path="$1" is_relative="$2"
+    if [[ "$is_relative" == "1" ]]; then
+        echo "$FIREFOX_DIR/$path"
+    else
+        echo "$path"
+    fi
+}
 
 find_default_profile() {
     if [[ ! -f "$PROFILES_INI" ]]; then
@@ -15,54 +34,65 @@ find_default_profile() {
         exit 1
     fi
 
-    local path=""
-    local is_default=0
-    local is_relative=1
-    local found_path=""
+    local section="" key value
+    local install_default=""
+    local path="" is_default=0 is_relative=1
+    local default_path="" default_relative=1
+    declare -A relative_of=()
 
-    while IFS='=' read -r key value; do
-        key="${key// /}"
-        value="${value// /}"
+    flush_profile() {
+        if [[ -n "$path" ]]; then
+            relative_of["$path"]="$is_relative"
+            if [[ "$is_default" -eq 1 && -z "$default_path" ]]; then
+                default_path="$path"
+                default_relative="$is_relative"
+            fi
+        fi
+        path=""; is_default=0; is_relative=1
+    }
 
-        case "$key" in
-            \[Profile*)
-                # New section: reset state from previous profile block
-                if [[ "$is_default" -eq 1 && -n "$path" ]]; then
-                    found_path="$path"
-                    break
-                fi
-                path=""
-                is_default=0
-                is_relative=1
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        line="${line%$'\r'}"
+        if [[ "$line" =~ ^\[(.*)\]$ ]]; then
+            [[ "$section" == Profile* ]] && flush_profile
+            section="${BASH_REMATCH[1]}"
+            continue
+        fi
+        [[ "$line" == *=* ]] || continue
+        key="${line%%=*}"
+        value="${line#*=}"
+        case "$section" in
+            Install*)
+                [[ "$key" == "Default" && -z "$install_default" ]] && install_default="$value"
                 ;;
-            Default)
-                [[ "$value" == "1" ]] && is_default=1
-                ;;
-            IsRelative)
-                is_relative="$value"
-                ;;
-            Path)
-                path="$value"
+            Profile*)
+                case "$key" in
+                    Default)    [[ "$value" == "1" ]] && is_default=1 ;;
+                    IsRelative) is_relative="$value" ;;
+                    Path)       path="$value" ;;
+                esac
                 ;;
         esac
     done < "$PROFILES_INI"
+    [[ "$section" == Profile* ]] && flush_profile
 
-    # Handle last block in file
-    if [[ "$is_default" -eq 1 && -n "$path" && -z "$found_path" ]]; then
-        found_path="$path"
+    if [[ -n "$install_default" ]]; then
+        if [[ "$install_default" == /* ]]; then
+            echo "$install_default"
+        else
+            resolve_path "$install_default" "${relative_of[$install_default]:-1}"
+        fi
+        return
     fi
 
-    if [[ -z "$found_path" ]]; then
-        echo "ERROR: Could not determine the default Firefox profile from $PROFILES_INI" >&2
-        echo "Open 'about:profiles' in Firefox to find the active profile path manually." >&2
-        exit 1
+    if [[ -n "$default_path" ]]; then
+        resolve_path "$default_path" "$default_relative"
+        return
     fi
 
-    if [[ "$is_relative" -eq 1 ]]; then
-        echo "$HOME/.mozilla/firefox/$found_path"
-    else
-        echo "$found_path"
-    fi
+    echo "ERROR: Could not determine the default Firefox profile from $PROFILES_INI" >&2
+    echo "Open 'about:profiles' in Firefox to find the active profile path manually." >&2
+    exit 1
 }
 
 PROFILE_DIR="$(find_default_profile)"
